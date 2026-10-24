@@ -29,7 +29,7 @@
 - Architectures: `x86_64`, `aarch64`.
 - One subcontainer (`main`) running the image's own entrypoint
   (`sdk.useEntrypoint()`): `bin/docker-entrypoint` initializes the embedded
-  postgres, runs migrations, then starts Rails via Thruster on port 80.
+  postgres, runs migrations, then starts Rails via Thruster on port 8080 (`HTTP_PORT` env — the image runs as uid 1000 and cannot bind port 80).
 
 ## Volume and Data Layout
 
@@ -49,7 +49,7 @@ None.
 
 ## Network Access and Interfaces
 
-One interface, `ui` (type `ui`), bound to port 80 as HTTP. Whether it is
+One interface, `ui` (type `ui`), bound to port 8080 as HTTP. Whether it is
 reachable over LAN, Tor, or clearnet is the user's choice in StartOS.
 
 ## Installation and First-Run Flow
@@ -67,7 +67,7 @@ None.
 
 ## Health Checks
 
-`Web Interface` — `checkPortListening` on port 80. A failure means the Rails
+`Web Interface` — `checkPortListening` on port 8080. A failure means the Rails
 server is not accepting connections (still booting, or crashed).
 
 ## Backups and Restore
@@ -94,15 +94,15 @@ subcontainers: ['main']
 volumes:
   main: '/data'
 file_models: []
-startos_managed_env_vars: []
+startos_managed_env_vars: ['HTTP_PORT=8080', 'LANG=C.UTF-8', 'LC_ALL=C.UTF-8']
 dependencies: []
 interfaces:
   ui:
-    port: 80
+    port: 8080
     protocol: 'http'
     type: 'ui'
 actions: []
 tasks: []
 health_checks:
-  'Web Interface': 'checkPortListening on port 80'
+  'Web Interface': 'checkPortListening on port 8080'
 ```

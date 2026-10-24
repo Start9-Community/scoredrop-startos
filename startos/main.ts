@@ -32,7 +32,12 @@ export const main = sdk.setupMain(async ({ effects }) => {
       exec: {
         command: sdk.useEntrypoint(),
         // The slim image only ships C/POSIX locales; the runtime's LANG breaks initdb.
-        env: { LANG: 'C.UTF-8', LC_ALL: 'C.UTF-8' },
+        // HTTP_PORT: container runs as uid 1000, cannot bind privileged port 80.
+        env: {
+          LANG: 'C.UTF-8',
+          LC_ALL: 'C.UTF-8',
+          HTTP_PORT: String(uiPort),
+        },
       },
       ready: {
         display: i18n('Web Interface'),
