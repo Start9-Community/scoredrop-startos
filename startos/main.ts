@@ -29,7 +29,11 @@ export const main = sdk.setupMain(async ({ effects }) => {
     })
     .addDaemon('main', {
       subcontainer,
-      exec: { command: sdk.useEntrypoint() },
+      exec: {
+        command: sdk.useEntrypoint(),
+        // The slim image only ships C/POSIX locales; the runtime's LANG breaks initdb.
+        env: { LANG: 'C.UTF-8', LC_ALL: 'C.UTF-8' },
+      },
       ready: {
         display: i18n('Web Interface'),
         fn: () =>
