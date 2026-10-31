@@ -13,7 +13,7 @@ export const manifest = setupManifest({
   volumes: ['main'],
   images: {
     scoredrop: {
-      source: { dockerTag: 'martinbarilik/scoredrop:0.1.0' },
+      source: { dockerTag: 'martinbarilik/scoredrop:2.0.0' },
       arch: ['x86_64', 'aarch64'],
     },
   },

@@ -88,7 +88,7 @@ Restore replaces it wholesale.
 ```yaml
 package_id: 'scoredrop'
 image:
-  scoredrop: 'dockerTag martinbarilik/scoredrop:0.1.0'
+  scoredrop: 'dockerTag martinbarilik/scoredrop:2.0.0'
 architectures: ['x86_64', 'aarch64']
 subcontainers: ['main']
 volumes:
