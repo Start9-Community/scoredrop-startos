@@ -10,7 +10,7 @@ export const current = VersionInfo.of({
     fr_FR: 'Version initiale pour StartOS',
   },
   migrations: {
-    up: async ({ effects }) => { },
+    up: async ({ effects }) => {},
     down: IMPOSSIBLE,
   },
 })
