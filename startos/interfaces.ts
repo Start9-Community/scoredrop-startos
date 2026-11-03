@@ -1,12 +1,24 @@
+import { storeJson } from './fileModels/store.json'
 import { i18n } from './i18n'
 import { sdk } from './sdk'
-import { uiPort } from './utils'
+import { uiPort, uiUsername } from './utils'
 
 export const setInterfaces = sdk.setupInterfaces(async ({ effects }) => {
-  const multi = sdk.MultiHost.of(effects, 'ui')
-  const origin = await multi.bindPort(uiPort, {
+  const password = await storeJson.read((s) => s.uiPassword).const(effects)
+
+  const origin = await sdk.MultiHost.of(effects, 'ui').bindPort(uiPort, {
     protocol: 'http',
     preferredExternalPort: 80,
+    // Scoredrop has no login of its own; the StartOS proxy is its only gate.
+    addSsl: password
+      ? {
+          auth: {
+            type: 'basic',
+            credentials: [{ username: uiUsername, password }],
+            realm: 'Scoredrop',
+          },
+        }
+      : undefined,
   })
 
   const ui = sdk.createInterface(effects, {

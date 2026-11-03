@@ -2,34 +2,33 @@
 
 ## Documentation
 
-- Scoredrop repository — upstream source and full feature docs:
-  https://github.com/martinbarilik/scoredrop
-- ntfy — the push service Scoredrop notifies through:
-  https://ntfy.sh
+- [Scoredrop README](https://github.com/martinbarilik/scoredrop/blob/main/README.md) — the pages, settings, team slugs, and how notifications are triggered.
+- [ntfy documentation](https://docs.ntfy.sh) — subscribing to a topic on your phone or desktop, and running your own ntfy server.
 
 ## What you get on StartOS
 
-Scoredrop watches football fixtures via the free sportscore.com widget API and
-pushes match event notifications (goals, red cards, kickoffs, full-time
-results) to your ntfy server.
+Scoredrop's web interface, protected by a password StartOS generates for you. Your settings, subscriptions, and match history are included in your StartOS backups.
 
-This package runs Scoredrop as a single self-contained container: the Rails app
-and an embedded PostgreSQL live in one image, with all data on the `main`
-volume — so StartOS backups capture everything (settings, subscriptions, match
-history).
+Scoredrop needs an ntfy server to deliver notifications to. You can use the public `https://ntfy.sh`, or install ntfy on this server from the marketplace.
 
 ## Getting set up
 
-1. Open the **Web Interface** interface from Scoredrop's service page.
-2. Enter your ntfy server URL and topic in the app's settings.
-3. Subscribe to the teams/leagues you want to follow.
+1. Run the **Set Web Interface Password** task. Save the username and password it shows you.
+2. Start Scoredrop and open the **Web Interface**. Sign in with those credentials.
+3. On **Settings**, enter your ntfy server URL and a topic, choose which events notify you, and save.
+4. Subscribe to the same topic in the ntfy app on your phone.
+5. On **Browse teams**, pick a league and subscribe to the teams you follow. Check a slug with **Verify a slug** before subscribing to it.
 
-All configuration lives in the app's database — there are no config files or
-actions in this package.
+## Using Scoredrop
 
-## Notes
+### Web interface
 
-- Run exactly one instance: the embedded postgres and in-process poller are
-  single-process.
-- Notifications can trail real time by a minute or two (upstream API caching).
-- The service is football-only; other sports are locked off upstream.
+**Subscriptions** shows your teams, their tracked matches, and when Scoredrop last polled. **Browse teams** adds and removes teams, and **Settings** holds your ntfy server and notification choices. Changes apply on the next poll, without a restart.
+
+### Actions
+
+- **Reset Web Interface Password** — generates a new password and shows it once. The old password stops working immediately.
+
+### Connections Scoredrop makes
+
+Scoredrop fetches fixtures from sportscore.com, the NHL, and HockeySlovakia, and publishes to your ntfy server. If you publish Scoredrop through a tunnel to keep your home IP private, send its outbound traffic through that tunnel too, or those sites see your home IP. If you use a tunnel for another reason, there is nothing to change.

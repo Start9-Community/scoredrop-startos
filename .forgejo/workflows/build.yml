@@ -9,7 +9,7 @@ name: Build
       - reopened
       - ready_for_review
     branches:
-      - master
+      - main
     paths-ignore:
       - '*.md'
 permissions: {}

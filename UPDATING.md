@@ -33,3 +33,10 @@ curl -s https://hub.docker.com/v2/repositories/martinbarilik/scoredrop/tags \
 
 The image must exist for both `amd64` and `arm64` before bumping — see the
 upstream README's buildx instructions for multi-arch publishing.
+
+## Checks on every bump
+
+The package leans on two upstream behaviors that a new image can change. Confirm both before releasing:
+
+- The entrypoint still seeds no `config.yml` when `SCOREDROP_CONFIG` is empty: a fresh install must start with no subscriptions and no ntfy server.
+- The app still has no login of its own. If upstream adds one, the StartOS proxy gate in `startos/interfaces.ts` becomes a second password and should be replaced by the app's own.
