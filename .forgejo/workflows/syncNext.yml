@@ -3,7 +3,7 @@ name: Sync next
 'on':
   push:
     branches:
-      - master
+      - main
   workflow_dispatch: null
 jobs:
   sync:

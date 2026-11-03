@@ -17,26 +17,24 @@ export const main = sdk.setupMain(async ({ effects }) => {
     'main',
   )
 
-  // The image runs as uid 1000 (rails user); StartOS mounts volumes root-owned.
   return sdk.Daemons.of(effects)
     .addOneshot('chown', {
       subcontainer,
-      exec: {
-        command: ['chown', '-R', '1000:1000', '/data'],
-        user: 'root',
-      },
+      // The image runs as uid 1000; StartOS mounts volumes root-owned.
+      exec: { command: ['chown', '-R', '1000:1000', '/data'], user: 'root' },
       requires: [],
     })
     .addDaemon('main', {
       subcontainer,
       exec: {
         command: sdk.useEntrypoint(),
-        // The slim image only ships C/POSIX locales; the runtime's LANG breaks initdb.
-        // HTTP_PORT: container runs as uid 1000, cannot bind privileged port 80.
         env: {
+          // The slim image ships only C/POSIX locales; initdb fails under any other LANG.
           LANG: 'C.UTF-8',
           LC_ALL: 'C.UTF-8',
           HTTP_PORT: String(uiPort),
+          // Empty, so the entrypoint seeds no example config for the first boot to import.
+          SCOREDROP_CONFIG: '',
         },
       },
       ready: {
